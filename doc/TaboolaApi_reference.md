@@ -1,6 +1,6 @@
 # Taboola Native SDK Reference
 
->**Note**: if you haven't been specifically instructed by your Tabooola account manager to use this section of TaboolaApi, you should probably use [TaboolaWidget](../README.md]) which is faster and more simple to integrate. 
+>**Note**: if you haven't been specifically instructed by your Tabooola account manager to use this section of TaboolaApi, you should probably use [TaboolaWidget](http://github.com/taboola-android) which is faster and more simple to integrate. 
 
 
 # TaboolaApi
