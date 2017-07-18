@@ -1,7 +1,5 @@
-package com.taboola.nativesample2;
+package com.taboola.samples.articlefeed;
 
-import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -13,11 +11,11 @@ import android.widget.Toast;
 
 import com.taboola.android.api.TBPlacement;
 import com.taboola.android.api.TBPlacementRequest;
-import com.taboola.android.api.TBRecommendationItem;
 import com.taboola.android.api.TBRecommendationRequestCallback;
 import com.taboola.android.api.TBRecommendationsRequest;
 import com.taboola.android.api.TBRecommendationsResponse;
 import com.taboola.android.api.TaboolaApi;
+import com.taboola.samples.endlessfeed.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
         };
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.addOnScrollListener(scrollListener);
+
+        mData.add(new DemoItem(R.drawable.image_demo, getResources().getString(R.string.lorem_ipsum1)));
         mAdapter = new FeedAdapter(mData);
         mRecyclerView.setAdapter(mAdapter);
         snackbar = Snackbar.make(mRecyclerView, "Waiting for network", Snackbar.LENGTH_INDEFINITE);
@@ -60,39 +60,10 @@ public class MainActivity extends AppCompatActivity {
     private void onRecommendationsFetched(TBPlacement placement) {
         placement.prefetchThumbnails();
         mPlacement = placement;
-        List<Object> mergedFeedItems = mergeFeedItems(getDemoData(), placement.getItems());
 
         int currentSize = mAdapter.getItemCount();
-        mData.addAll(mergedFeedItems);
-        mAdapter.notifyItemRangeInserted(currentSize, mergedFeedItems.size());
-    }
-
-    private List<Object> mergeFeedItems(List<DemoItem> demoItems,
-                                        List<TBRecommendationItem> recommendationItems) {
-        int size = demoItems.size() + recommendationItems.size();
-        List<Object> mergedFeedItems = new ArrayList<>(size);
-        mergedFeedItems.addAll(demoItems);
-
-        // insert taboola ad every 4 elements
-        int nextInsertionIndex = 4;
-        for (TBRecommendationItem item : recommendationItems) {
-            mergedFeedItems.add(nextInsertionIndex, item);
-            nextInsertionIndex += 5;
-        }
-
-        return mergedFeedItems;
-    }
-
-    private List<DemoItem> getDemoData() {
-        List<DemoItem> list = new ArrayList<>(16);
-        Resources res = getResources();
-        for (int i = 0; i < 4; i++) {
-            list.add(new DemoItem(R.drawable.image_demo, res.getString(R.string.lorem_ipsum1)));
-            list.add(new DemoItem(R.drawable.image_demo, res.getString(R.string.lorem_ipsum2)));
-            list.add(new DemoItem(R.drawable.image_demo, res.getString(R.string.lorem_ipsum3)));
-            list.add(new DemoItem(R.drawable.image_demo, res.getString(R.string.lorem_ipsum4)));
-        }
-        return list;
+        mData.addAll(placement.getItems());
+        mAdapter.notifyItemRangeInserted(currentSize, placement.getItems().size());
     }
 
     private void fetchTaboolaRecommendations() {
@@ -123,7 +94,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadNextRecommendationsBatch() {
-        TaboolaApi.getInstance().getNextBatchForPlacement(mPlacement, new TBRecommendationRequestCallback() {
+        if (mPlacement == null) {
+            return; // wait for the first request to return
+        }
+
+        TaboolaApi.getInstance().getNextBatchForPlacement(mPlacement, 10, new TBRecommendationRequestCallback() {
             @Override
             public void onRecommendationsFetched(TBRecommendationsResponse response) {
                 TBPlacement placement = response.getPlacementsMap().values().iterator().next(); // there will be only one placement

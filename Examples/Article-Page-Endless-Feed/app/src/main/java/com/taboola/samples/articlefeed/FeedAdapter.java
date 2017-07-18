@@ -1,7 +1,8 @@
-package com.taboola.nativesample2;
+package com.taboola.samples.articlefeed;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -9,6 +10,8 @@ import android.widget.TextView;
 
 import com.taboola.android.api.TBImageView;
 import com.taboola.android.api.TBRecommendationItem;
+import com.taboola.android.api.TBTextView;
+import com.taboola.samples.endlessfeed.R;
 
 import java.util.List;
 
@@ -65,15 +68,30 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
 
                 TBImageView thumbnailView = item.getThumbnailView(adContainer.getContext());
+                TBTextView titleView = item.getTitleView(adContainer.getContext());
+                TBTextView brandingView = item.getBrandingView(adContainer.getContext());
+
+                // just in case it wasn't removed properly
+                removeFromParent(thumbnailView);
+                removeFromParent(titleView);
+                removeFromParent(brandingView);
+
                 adContainer.addView(thumbnailView);
-                adContainer.addView(item.getTitleView(adContainer.getContext()));
-                adContainer.addView(item.getBrandingView(adContainer.getContext()));
+                adContainer.addView(titleView);
+                adContainer.addView(brandingView);
                 break;
             }
 
             default: {
                 throw new IllegalStateException("Unknown view type: " + holder.getItemViewType());
             }
+        }
+    }
+
+    private void removeFromParent(View view) {
+        LinearLayout viewParent = (LinearLayout) view.getParent();
+        if (viewParent != null) {
+            viewParent.removeView(view);
         }
     }
 

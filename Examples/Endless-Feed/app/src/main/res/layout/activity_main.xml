@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="vertical"
-    tools:context="com.taboola.nativesample2.MainActivity">
+    tools:context="com.taboola.samples.endlessfeed.com.taboola.samples.MainActivity">
 
 
 </android.support.v7.widget.RecyclerView>

@@ -1,4 +1,4 @@
-package com.taboola.nativesample4;
+package com.taboola.samples.singleitem;
 
 import android.app.Application;
 

@@ -1,9 +1,7 @@
-package com.taboola.nativesample4;
+package com.taboola.samples.singleitem;
 
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.hardware.Camera;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,7 +15,8 @@ import com.taboola.android.api.TBRecommendationRequestCallback;
 import com.taboola.android.api.TBRecommendationsRequest;
 import com.taboola.android.api.TBRecommendationsResponse;
 import com.taboola.android.api.TBTextView;
-import com.taboola.android.api.TaboolaSdk;
+import com.taboola.android.api.TaboolaApi;
+import com.taboola.samples.R;
 
 public class MainActivity extends AppCompatActivity {
     private final static int STATE_OFF = 0;

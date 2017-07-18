@@ -1,4 +1,4 @@
-package com.taboola.nativesample2;
+package com.taboola.samples.endlessfeed;
 
 import android.app.Application;
 
