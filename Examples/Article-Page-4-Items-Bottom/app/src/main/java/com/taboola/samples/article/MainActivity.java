@@ -9,12 +9,12 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.taboola.android.sdk.TBPlacementRequest;
-import com.taboola.android.sdk.TBRecommendationItem;
-import com.taboola.android.sdk.TBRecommendationRequestCallback;
-import com.taboola.android.sdk.TBRecommendationsRequest;
-import com.taboola.android.sdk.TBRecommendationsResponse;
-import com.taboola.android.sdk.TaboolaSdk;
+import com.taboola.android.api.TBPlacementRequest;
+import com.taboola.android.api.TBRecommendationItem;
+import com.taboola.android.api.TBRecommendationRequestCallback;
+import com.taboola.android.api.TBRecommendationsRequest;
+import com.taboola.android.api.TBRecommendationsResponse;
+import com.taboola.android.api.TaboolaApi;
 import com.taboola.samples.R;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         TBRecommendationsRequest request = new TBRecommendationsRequest("http://example.com", "text");
         request.addPlacementRequest(placementRequest);
 
-        TaboolaSdk.getInstance().fetchRecommendations(request, new TBRecommendationRequestCallback() {
+        TaboolaApi.getInstance().fetchRecommendations(request, new TBRecommendationRequestCallback() {
             @Override
             public void onRecommendationsFetched(TBRecommendationsResponse response) {
                 List<TBRecommendationItem> items = response.getPlacementsMap().get(placementName).getItems();
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onAttributionClick(View view) {
-        TaboolaSdk.getInstance().handleAttributionClick(this);
+        TaboolaApi.getInstance().handleAttributionClick(this);
     }
 
     private void showRecommendations(List<TBRecommendationItem> items) {
