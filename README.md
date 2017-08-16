@@ -120,7 +120,10 @@ Create A `TBRecommendationsRequest` and add all of the previously created `TBPla
                 
    mAdContainer.addView(item.getThumbnailView(MainActivity.this));
    mAdContainer.addView(item.getTitleView(MainActivity.this));
-   mAdContainer.addView(item.getBrandingView(MainActivity.this));
+   TBTextView brandingView = item.getBrandingView(this);
+   if (brandingView != null) { // If branding text is not available null is returned
+       mAdContainer.addView(brandingView);
+   }
 ```
 
 ### 1.7. Supply your own implementation of the attribution view
