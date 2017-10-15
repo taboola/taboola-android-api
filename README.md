@@ -12,9 +12,9 @@
 ## Basic concepts
 The TaboolaApi allows you to get Taboola recommendations to display in your app. 
 For each recommendation item TaboolaApi will provide pre-populated views, which you can style to match your app look and feel and place where needed within your app.
-The views will automatically handle evertything else: click handling, reporting visiblity back to Taboola's server and more.
+The views will automatically handle everything else: click handling, reporting visibility back to Taboola's server and more.
 
-Browse through the sample apps in this repository to see how the TaboolaApi can be implemente in different types of apps.
+Browse through the sample apps in this repository to see how the TaboolaApi can be implemented in different types of apps.
 ## 1. Getting Started
 
 
@@ -43,7 +43,7 @@ Please refer to the the Taboola REST API documenation for more details.
    compile 'com.squareup.picasso:picasso:2.5.2'
  ```
 > ## Notice
-> We encourgae developers to use the latest SDK version. In order to stay up-to-date we suggest subscribing to get github notifications whenever there is a new release. For more information check: https://help.github.com/articles/managing-notifications-for-pushes-to-a-repository/
+> We encourage developers to use the latest SDK version. In order to stay up-to-date we suggest subscribing to get github notifications whenever there is a new release. For more information check: https://help.github.com/articles/managing-notifications-for-pushes-to-a-repository/
 
 
 2. Include this line in your app’s AndroidManifest.xml to allow Internet access
@@ -68,7 +68,7 @@ In your `Application` class
 ```
 ### 1.4. Construct your request for recommendations
 
-Create A `TBPlacementRequest` for each placement (You can do this in your `Activity` or `Fragment` code)
+Create a `TBPlacementRequest` for each placement (You can do this in your `Activity` or `Fragment` code)
 
 ```java
    String placementName = "article";
@@ -78,7 +78,7 @@ Create A `TBPlacementRequest` for each placement (You can do this in your `Activ
            .setThumbnailSize(400, 300) // ThumbnailSize is optional
            .setTargetType("mix"); // TargetType is optional
 ```
-Create A `TBRecommendationsRequest` and add all of the previously created `TBPlacementRequest` objects to it
+Create a `TBRecommendationsRequest` and add all of the previously created `TBPlacementRequest` objects to it
 
 ```java
    String pageUrl = "http://example.com";
@@ -160,7 +160,7 @@ Used for implementing pagination or infinite scroll (load more items as the user
 
 The default click behavior of TaboolaWidget is as follows:
 
-* On devices where Chrome custom tab is supported - open the recommendation in a chrome custom tab (in-app)
+* On devices where Chrome custom tab is supported - open the recommendation in a Chrome custom tab (in-app)
 * Otherwise - open the recommendation in the system default web browser (outside of the app) 
 
 TaboolaApi allows app developers to intercept recommendation clicks in order to create a click-through or to override the default way of opening the recommended article. 
