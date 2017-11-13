@@ -7,7 +7,8 @@
 1. [Getting Started](#1-getting-started)
 2. [Example Apps](#2-example-apps)
 3. [SDK Reference](#3-sdk-reference)
-4. [License](#4-license)
+4. [Proguard](#4-proguard)
+5. [License](#5-license)
 
 ## Basic concepts
 The TaboolaApi allows you to get Taboola recommendations to display in your app. 
@@ -191,6 +192,10 @@ This repository includes an example Android app which uses the `TaboolaApi`.
 ## 3. SDK Reference
 [TaboolaApi Reference](doc/TaboolaApi_reference.md)
 
-## 4. License
+## 4. ProGuard
+You can find proguard rules for Taboola Widget in [proguard-taboola-api.pro](/Examples/Article-Page-4-Items-Bottom/app/proguard-taboola-api.pro) file.
+The file contains instructions on which rules to comment/uncomment depending on which parts of the SDK you are using.
+
+## 5. License
 This program is licensed under the Taboola, Inc. SDK License Agreement (the “License Agreement”).  By copying, using or redistributing this program, you agree to the terms of the License Agreement.  The full text of the license agreement can be found at [https://github.com/taboola/taboola-android/blob/master/LICENSE](https://github.com/taboola/taboola-android/blob/master/LICENSE).
 Copyright 2017 Taboola, Inc.  All rights reserved.
