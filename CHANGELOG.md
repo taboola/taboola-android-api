@@ -1,4 +1,8 @@
 # Change Log
+## [1.3.3] - 2017-12-28
+### Changed
+- Updated the user-agent string included in SDK requests
+- "available" event is counted automatically on succesful recommendations request
 
 ## [1.3.2] - 2017-11-23
 ### Added
