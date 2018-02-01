@@ -1,4 +1,13 @@
 # Change Log
+## [Unreleased]
+### Added
+- TBPlacementRequest#setAvailable() method that allows to override automatic sending of "Available" event
+- notifyAvailable() methods that allow sending "Available" event manually 
+
+## [1.3.4] - 2018-01-31
+### Fixed
+- Fix memory leak caused by Chrome Tabs warmup
+
 ## [1.3.3] - 2017-12-28
 ### Changed
 - Updated the user-agent string included in SDK requests
