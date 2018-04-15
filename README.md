@@ -89,6 +89,7 @@ Create a `TBRecommendationsRequest` and add all of the previously created `TBPla
            new TBRecommendationsRequest(pageUrl, sourceType)
                    .setUserReferrer("<UserReferrer>") // optional
                    .setUserUnifiedId("<UnifiedId>") // optional
+                   .setSourceId("<SourceId>") // optional
                    .addPlacementRequest(placementRequest)
                    .addPlacementRequest(placementRequest2)
                    .addPlacementRequest(placementRequest3);
