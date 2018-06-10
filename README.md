@@ -1,6 +1,6 @@
 # Taboola Native Android SDK (TaboolaApi)
 ![Platform](https://img.shields.io/badge/Platform-Android-green.svg)
-[ ![Download](https://api.bintray.com/packages/taboola-com/taboola-android-sdk/android-sdk/images/download.svg?version=1.3.6) ](https://bintray.com/taboola-com/taboola-android-sdk/android-sdk/1.3.6/link)
+[ ![Download](https://api.bintray.com/packages/taboola-com/taboola-android-sdk/android-sdk/images/download.svg?version=2.0.8) ](https://bintray.com/taboola-com/taboola-android-sdk/android-sdk/2.0.8/link)
 [![License](https://img.shields.io/badge/License%20-Taboola%20SDK%20License-blue.svg)](https://github.com/taboola/taboola-android/blob/master/LICENSE)
 
 ## Table Of Contents
@@ -33,7 +33,7 @@ Please refer to the the Taboola REST API documenation for more details.
 1. Add the library dependency to your project
   
   ```groovy
-   compile 'com.taboola:android-sdk:1.3.+@aar'
+   compile 'com.taboola:android-sdk:2.0.8@aar'
 
    // include to have clicks opened in chrome tabs rather than in a default browser (mandatory)
    compile 'com.android.support:customtabs:26.+'
