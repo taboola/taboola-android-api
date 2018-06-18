@@ -45,7 +45,7 @@ Please refer to the the Taboola REST API documenation for more details.
    implementation 'com.squareup.picasso:picasso:2.5.2'
  ```
 > ## Notice
-> We encourage developers to use the latest SDK version. In order to stay up-to-date we suggest subscribing to get github notifications whenever there is a new release. For more information check: https://help.github.com/articles/managing-notifications-for-pushes-to-a-repository/
+> We encourage developers to use the latest SDK version. In order to stay up-to-date we suggest to subscribe in order to get github notifications whenever there is a new release. For more information check: https://help.github.com/articles/managing-notifications-for-pushes-to-a-repository/
 
 
 2. Include this line in your app’s AndroidManifest.xml to allow Internet access
@@ -139,7 +139,7 @@ Call `handleAttributionClick()` every time this view is clicked
 ```
 
 ### 1.8 Request next batch of the recommendations for placement
-Used for implementing pagination or infinite scroll (load more items as the user scrolls down). The method gets the next batch of recommendation items for a specified placement. The name of the returned Placement will have a "counter" added as a suffix. For example, if the original placement name was "article" the new name will be "article 1", next one "article 2", and so on. The counter is incremented on each successful fetch.
+Used for implementing pagination or infinite scroll (load more items when the user scrolls down). The method gets the next batch of recommendation items for a specified placement. The name of the returned Placement will have a "counter" added as a suffix. For example, if the original placement name was "article" the new name will be "article 1", next one "article 2", and so on. The counter is incremented on each successful fetch.
 
 
 ```Java
@@ -196,7 +196,7 @@ This repository includes an example Android app which uses the `TaboolaApi`.
 
 ## 4. ProGuard
 You can find proguard rules for Taboola Widget in [proguard-taboola-api.pro](/Examples/Article-Page-4-Items-Bottom/app/proguard-taboola-api.pro) file.
-The file contains instructions on which rules to comment/uncomment depending on which parts of the SDK you are using.
+The file contains instructions to the rules which you should use depending on which parts of the SDK you are using (you should comment/uncomment which you need).
 
 ## 5. GDPR
 In order to support the The EU General Data Protection Regulation (GDPR - https://www.eugdpr.org/) in Taboola Mobile SDK, application developer should show a pop up asking the user’s permission for storing their personal data in the App. In order to control the user’s personal data (to store in the App or not) there exists a flag `User_opt_out`. It’s mandatory to set this flag when using the Taboola SDK. The way to set this flag depends on the type of SDK you are using. By default we assume no permission from the user on a pop up, so the personal data will not be saved.
@@ -221,5 +221,5 @@ public class SampleApplication extends Application {
 ```
 
 ## 6. License
-This program is licensed under the Taboola, Inc. SDK License Agreement (the “License Agreement”).  By copying, using or redistributing this program, you agree to the terms of the License Agreement.  The full text of the license agreement can be found at [https://github.com/taboola/taboola-android/blob/master/LICENSE](https://github.com/taboola/taboola-android/blob/master/LICENSE).
+This program is licensed under the Taboola, Inc. SDK License Agreement (the “License Agreement”).  By copying, using or redistributing this program, you agree with the terms of the License Agreement.  The full text of the license agreement can be found at [https://github.com/taboola/taboola-android/blob/master/LICENSE](https://github.com/taboola/taboola-android/blob/master/LICENSE).
 Copyright 2017 Taboola, Inc.  All rights reserved.
