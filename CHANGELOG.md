@@ -4,6 +4,12 @@
 - TBPlacementRequest#setAvailable() method that allows to override automatic sending of "Available" event
 - notifyAvailable() methods that allow sending "Available" event manually 
 
+## [2.0.23] - 2018-08-08
+### Fixed
+- Fix memory leaks in sdk api
+- Added BI layer(internal)
+- Protect resize in sdk standard from crash. Add callback for image loading failure
+
 ## [1.3.4] - 2018-01-31
 ### Fixed
 - Fix memory leak caused by Chrome Tabs warmup
