@@ -1,8 +1,4 @@
 # Change Log
-## [Unreleased]
-### Added
-- TBPlacementRequest#setAvailable() method that allows to override automatic sending of "Available" event
-- notifyAvailable() methods that allow sending "Available" event manually 
 
 ## [2.0.23] - 2018-08-08
 ### Fixed
@@ -31,3 +27,7 @@
 ### Fixed
 - Fix source.id generation
 - Internal bug fixes
+### Added
+- TBPlacementRequest#setAvailable() method that allows to override automatic sending of "Available" event
+- notifyAvailable() methods that allow sending "Available" event manually 
+
