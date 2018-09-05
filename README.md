@@ -33,7 +33,7 @@ Please refer to the the Taboola REST API documenation for more details.
 1. Add the library dependency to your project
 
   ```groovy
-   implementation 'com.taboola:android-sdk:2.0.22@aar'
+   implementation 'com.taboola:android-sdk:2.0.25@aar'
 
    // include to have clicks opened in chrome tabs rather than in a default browser (mandatory)
    implementation 'com.android.support:customtabs:27.+'
