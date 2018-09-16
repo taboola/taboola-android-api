@@ -61,9 +61,11 @@ In your `Application` class
        @Override
        public void onCreate() {
            super.onCreate();
+           ...
            TaboolaApi.getInstance().init(getApplicationContext(),
                    "<publisher-as-supplied-by-taboola>",
                    "<api-key-as-supplied-by-taboola>");
+           ...
        }
    }
 ```
@@ -73,10 +75,10 @@ Create a `TBPlacementRequest` for each placement (You can do this in your `Activ
 
 ```java
    String placementName = "article";
-   int recCount = 5; //  how many recommendations should be returned
+   int recCount = 5; //  How many recommendations should be returned
 
    TBPlacementRequest placementRequest = new TBPlacementRequest(placementName, recCount)
-           .setThumbnailSize(400, 300) // ThumbnailSize is optional
+           .setThumbnailSize(400, 300) // ThumbnailSize is optional, sizes are in pixels
            .setTargetType("mix"); // TargetType is optional
 ```
 Create a `TBRecommendationsRequest` and add all of the previously created `TBPlacementRequest` objects to it
@@ -98,6 +100,7 @@ Create a `TBRecommendationsRequest` and add all of the previously created `TBPla
 (Maximum 12 `TBPlacementRequest` per one `TBRecommendationsRequest`)
 
 ### 1.5. Fetch Taboola recommendations
+The following code requests data from Taboola servers and stores it locally:
 ```java
    TaboolaApi.getInstance().fetchRecommendations(recommendationsRequest, new TBRecommendationRequestCallback() {
        @Override
@@ -108,32 +111,97 @@ Create a `TBRecommendationsRequest` and add all of the previously created `TBPla
 
        @Override
        public void onRecommendationsFailed(Throwable throwable) {
-           // todo handle error
-           Toast.makeText(MainActivity.this, "Failed: " + throwable.getMessage(),
-                   Toast.LENGTH_LONG).show();
+           //TODO: handle error
+           Log.d(TAG, "Failed: " + throwable.getMessage());
        }
    });
 ```
 
 ### 1.6. Displaying Taboola recommendations
-```java
-   TBPlacement placement = placementsMap.get(placementName);
-   TBRecommendationItem item = placement.getItems().get(0);
+To display Taboola native views, follow these steps:
 
-   mAdContainer.addView(item.getThumbnailView(MainActivity.this));
-   mAdContainer.addView(item.getTitleView(MainActivity.this));
-   TBTextView brandingView = item.getBrandingView(this);
-   if (brandingView != null) { // If branding text is not available null is returned
-       mAdContainer.addView(brandingView);
+#### 1.6.1. About <AdContainer>:
+In the upcoming code sample, <AdContainer> is the View in which you wish to contain Taboola's child Views. This example shows how to add the views of one Taboola Item to a parent View in your app.
+
+#### 1.6.2. Extract Taboola Views from Server data
+Inside the "onRecommendationsFetched" callback, after creating the placementsMap instance, extract a Taboola placement object and from it, a Taboola item. You can display Taboola content using native objects using the following code:
+```java
+   TaboolaApi.getInstance().fetchRecommendations(recommendationsRequest, new TBRecommendationRequestCallback() {
+       @Override
+       public void onRecommendationsFetched(TBRecommendationsResponse response) {
+           // map where a Key is the Placements name (you can store it as a member variable for convenience)
+           Map<String, TBPlacement> placementsMap = response.getPlacementsMap();
+           
+           extractViewsFromOneItem();
+
+   }
+   
+   /**
+    * This demo only shows handling one item, you might want to display additional items.
+    * (For example, directly inject the Item List to a RecyclerView adapter).
+    */
+   private void extractViewsFromOneItem() {
+    TBPlacement placement = placementsMap.get(placementName);
+    if (placement != null){
+      TBRecommendationItem item = placement.getItems().get(0);
+      <AdContainer>.addView(item.getThumbnailView(<Actvitiy>));
+      <AdContainer>.addView(item.getTitleView(<Actvitiy>));
+      TBTextView brandingView = item.getBrandingView(<Actvitiy>);
+      if (brandingView != null) { // If branding text is not available null is returned
+        <AdContainer>.addView(brandingView);
+      }
+    }
    }
 ```
+Note: A `brandingView` is meant to display the advertising brand information.
 
-### 1.7. Supply your own implementation of the attribution view
-Attribution view is a view with localized "By Taboola" text and icon.
-Call `handleAttributionClick()` every time this view is clicked
+### 1.7.Taboola Attribution View
+Taboola Attribution View is a view with a "By Taboola" text and icon.
+
+#### 1.7.1. Add Taboola Attribution View to your layout
+The following is a sample, feel free to implement yourself:
+```xml
+    <LinearLayout
+        android:id="@+id/attribution_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:weightSum="4"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/icon_attribution"/>
+        
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
+            android:layout_weight="3"
+            android:gravity="right"
+            android:text="@string/attribution_view_text"/>
+    </LinearLayout>
+```
+
+#### 1.7.2. Find Taboola Attribution View
 ```java
+  View attributionView = <Activity>.findViewById(R.id.attribution_view);
+```
+
+#### 1.7.3. Set a click listener on Taboola Attribution View:
+```java
+   attributionView.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        onAttributionClick();
+      }
+   });
+        
    public void onAttributionClick() {
-       TaboolaApi.getInstance().handleAttributionClick(MainActivity.this);
+       TaboolaApi.getInstance().handleAttributionClick(<Activity>);
    }
 ```
 
