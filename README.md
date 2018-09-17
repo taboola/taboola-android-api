@@ -210,51 +210,74 @@ Used for implementing pagination or infinite scroll (load more items when the us
 
 
 ```Java
-   TaboolaApi.getInstance().getNextBatchForPlacement(mPlacement, optionalCount, new TBRecommendationRequestCallback() {
-           @Override
-           public void onRecommendationsFetched(TBRecommendationsResponse response) {
-               TBPlacement placement = response.getPlacementsMap().values().iterator().next(); // there will be only one placement
-               // todo do smth with new the Items
-           }
+TaboolaApi.getInstance().getNextBatchForPlacement(mPlacement, optionalCount, new TBRecommendationRequestCallback() {
+  @Override
+  public void onRecommendationsFetched(TBRecommendationsResponse response) {
+    TBPlacement placement = response.getPlacementsMap().values().iterator().next(); // There will be only one placement.
+    //TODO: Do something with new the Items
+  } 
 
-           @Override
-           public void onRecommendationsFailed(Throwable throwable) {
-               Toast.makeText(MainActivity.this, "Fetch failed: " + throwable.getMessage(),
-                       Toast.LENGTH_LONG).show();
-           }
- });
+  @Override
+  public void onRecommendationsFailed(Throwable throwable) {
+    Log.d(TAG, "Fetch failed:" + throwable.getMessage());
+  } 
+});
 ```
-
 
 ### 1.9. Intercepting recommendation clicks
 
-The default click behavior of TaboolaWidget is as follows:
+##### 1.9.1. The default click behaviour of TaboolaWidget is as follows:
+* On devices where `Chrome Custom Tabs` are supported - Taboola will open the recommendation in a Chrome Custom Tab (in-app)
+* Otherwise - Taboola will open the recommendation in the default system web browser (outside of the app)
 
-* On devices where Chrome custom tab is supported - open the recommendation in a Chrome custom tab (in-app)
-* Otherwise - open the recommendation in the system default web browser (outside of the app)
-
+##### 1.9.2. Overriding default behaviour:
 TaboolaApi allows app developers to intercept recommendation clicks in order to create a click-through or to override the default way of opening the recommended article.
 
 In order to intercept clicks, you should implement the interface `com.taboola.android.api.TaboolaOnClickListener` and set it in the sdk.
 
-```java
-   TaboolaApi.getInstance().setOnClickListener(new TaboolaOnClickListener() {
-       @Override
-       public boolean onItemClick(String placementName, String itemId, String clickUrl, boolean isOrganic) {
-           return false;
-       }
-   });
+1. Implement the interface `com.taboola.android.api.TaboolaOnClickListener` 
+    1.1 `TaboolaOnClickListener` include the methods:
+     ```java
+    public boolean onItemClick(String placementName, String itemId, String clickUrl, boolean isOrganic);
+     ```
+    1.2 Example implementation:
+    In the same Activity/Fragment as `TaboolaWidget` instance:
+     ```java
+    TaboolaOnClickListener taboolaOnClickListener = new TaboolaOnClickListener() {
+      @Override
+      public boolean onItemClick(String placementName, String itemId, String clickUrl, boolean isOrganic) {          
+          //Code...
+          return false;
+      }};
+     ```    
+2. Connect the event listener to your `TaboolaWidget` instance. 
+    ```java
+    TaboolaApi.getInstance().setOnClickListener(taboolaOnClickListener);
+    ```    
+    
+##### 1.9.3. Event: taboolaViewItemClickHandler
+`boolean onItemClick(String placementName, String itemId, String clickUrl, boolean isOrganic)`
+This method will be called every time a user clicks on a Taboola Recommendation, right before it is sent to Android OS for relevant action resolve. The return value of this method allows you to control further system behaviour (after your own code executes).
 
-```
+###### 1.9.3.1 `placementName:`
+The name of the placement, in which an Item was clicked.
 
-This method will be called every time a user clicks a recommendation, right before triggering the default behavior. You can block default click handling for organic items by returning `false` in `onItemClick()` method.
+###### 1.9.3.2 `itemtId:`
+The id of the Item clicked.
 
-* Return **`false`** - abort the default behavior, the app should display the recommendation content on its own (for example, using an in-app browser). (Aborts only for organic items!)
-* Return **`true`** - this will allow the app to implement a click-through and continue to the default behaviour.
+###### 1.9.3.3 `clickUrl:`
+Original click url.
 
-`isOrganic` indicates whether the item clicked was an organic content recommendation or not.
-**Best practice would be to suppress the default behavior for organic items, and instead open the relevant screen in your app which shows that piece of content.**
+###### 1.9.3.4 `isOrganic:` 
+Indicates whether the item clicked was an organic content Taboola Recommendation or not.
+(The **best practice** would be to suppress the default behavior for organic items, and instead open the relevant screen in your app which will show that piece of content).
 
+###### 1.9.3.5 `Return value:`
+* Returning **`false`** - Aborts the click's default behavior. The app should display the Taboola Recommendation content on its own (for example, using an in-app browser).
+* Returning **`true`** - The click will be a standard one and will be sent to the Android OS for default behaviour.
+**Note:** Sponsored item clicks (non-organic) are not overridable!    
+    
+    
 ## 2. Example App
 This repository includes an example Android app which uses the `TaboolaApi`.
 
