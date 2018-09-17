@@ -281,6 +281,19 @@ Indicates whether the item clicked was an organic content Taboola Recommendation
 ## 2. Example App
 This repository includes an example Android app which uses the `TaboolaApi`.
 
+To use it:
+##### 2.1 Clone this repository
+1. Look for the "Clone or Download" button on this page top.
+2. Copy the url from the drop box.
+3. Clone to your local machine using your favourite Git client.
+
+##### 2.2 Open the project wih your IDE.
+1. Open the project as you would any other Android project.
+2. Taboola is optimized to working with Android Studio but other IDEs should work as well.
+
+##### 2.3 Example App As Troubleshooting Helper:
+In case you encounter some issues while integrating the SDK into your app, try to recreate the scenario within the example app. This might help to isolate the problems. For more help, you would be able to send the example app with your recreated issue to Taboola's support.
+
 ## 3. SDK Reference
 [TaboolaApi Reference](doc/TaboolaApi_reference.md)
 
@@ -292,22 +305,13 @@ The file contains instructions to the rules which you should use depending on wh
 In order to support the The EU General Data Protection Regulation (GDPR - https://www.eugdpr.org/) in Taboola Mobile SDK, application developer should show a pop up asking the user’s permission for storing their personal data in the App. In order to control the user’s personal data (to store in the App or not) there exists a flag `User_opt_out`. It’s mandatory to set this flag when using the Taboola SDK. The way to set this flag depends on the type of SDK you are using. By default we assume no permission from the user on a pop up, so the personal data will not be saved.
 
 ### 5.1. How to set the flag in the SDK integration
-Below you can find the way how to set the flag on API Android SDK we support. It’s recommended to put these lines alongside the other settings, such as publisher name, etc
-In the HTML file that contain the JS with publisher details, you will need to add:
-```javascript
-// Sample code
-public class SampleApplication extends Application {
-   @Override
-   public void onCreate() {
-       HashMap<String, String> optionalPageCommands = new HashMap<>();     super.onCreate();
-       TaboolaApi.getInstance().init(getApplicationContext(), "the-publisher-name",
-               "4123415900f1234825a66812345cef18cc123427");
-       TaboolaApi.getInstance().setImagePlaceholder(getResources().getDrawable(R.drawable.image_placeholder));
-       optionalPageCommands.put("apiParams","user.opt_out=true");
-       TaboolaApi.getInstance().setExtraProperties(optionalPageCommands);
-   }
-}
+Below you can find the way how to set the flag on API Android SDK we support. It’s recommended to put these lines alongside the other settings, such as publisher name, etc.
 
+```java
+    ...
+    HashMap<String, String> optionalPageCommands = new HashMap<>();
+    optionalPageCommands.put("apiParams", "user.opt_out=true");
+    TaboolaApi.getInstance().setExtraProperties(optionalPageCommands);
 ```
 
 ## 6. License
