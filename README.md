@@ -255,7 +255,7 @@ In order to intercept clicks, you should implement the interface `com.taboola.an
     TaboolaApi.getInstance().setOnClickListener(taboolaOnClickListener);
     ```    
     
-##### 1.9.3. Event: taboolaViewItemClickHandler
+##### 1.9.3. Event: onItemClick
 `boolean onItemClick(String placementName, String itemId, String clickUrl, boolean isOrganic)`
 This method will be called every time a user clicks on a Taboola Recommendation, right before it is sent to Android OS for relevant action resolve. The return value of this method allows you to control further system behaviour (after your own code executes).
 
