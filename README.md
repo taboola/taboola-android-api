@@ -269,8 +269,8 @@ The id of the Item clicked.
 Original click url.
 
 ###### 1.9.3.4 `isOrganic:` 
-Indicates whether the item clicked was an organic content Taboola Recommendation or not.
-(The **best practice** would be to suppress the default behavior for organic items, and instead open the relevant screen in your app which will show that piece of content).
+Indicates whether the item clicked was an organic content item or not.
+(The default behavior would be to allow users a regular click on organic traffic. If you wish, you can suppress the default behavior for organic items, and instead open the relevant screen in your app which will show that piece of content).
 
 ###### 1.9.3.5 `Return value:`
 * Returning **`false`** - Aborts the click's default behavior. The app should display the Taboola Recommendation content on its own (for example, using an in-app browser).
