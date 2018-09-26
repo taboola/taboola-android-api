@@ -61,9 +61,11 @@ In your `Application` class
        @Override
        public void onCreate() {
            super.onCreate();
+           ...
            TaboolaApi.getInstance().init(getApplicationContext(),
                    "<publisher-as-supplied-by-taboola>",
                    "<api-key-as-supplied-by-taboola>");
+           ...
        }
    }
 ```
@@ -73,10 +75,10 @@ Create a `TBPlacementRequest` for each placement (You can do this in your `Activ
 
 ```java
    String placementName = "article";
-   int recCount = 5; //  how many recommendations should be returned
+   int recCount = 5; //  How many recommendations should be returned
 
    TBPlacementRequest placementRequest = new TBPlacementRequest(placementName, recCount)
-           .setThumbnailSize(400, 300) // ThumbnailSize is optional
+           .setThumbnailSize(400, 300) // ThumbnailSize is optional, sizes are in pixels
            .setTargetType("mix"); // TargetType is optional
 ```
 Create a `TBRecommendationsRequest` and add all of the previously created `TBPlacementRequest` objects to it
@@ -98,6 +100,7 @@ Create a `TBRecommendationsRequest` and add all of the previously created `TBPla
 (Maximum 12 `TBPlacementRequest` per one `TBRecommendationsRequest`)
 
 ### 1.5. Fetch Taboola recommendations
+The following code requests data from Taboola servers and stores it locally:
 ```java
    TaboolaApi.getInstance().fetchRecommendations(recommendationsRequest, new TBRecommendationRequestCallback() {
        @Override
@@ -108,32 +111,97 @@ Create a `TBRecommendationsRequest` and add all of the previously created `TBPla
 
        @Override
        public void onRecommendationsFailed(Throwable throwable) {
-           // todo handle error
-           Toast.makeText(MainActivity.this, "Failed: " + throwable.getMessage(),
-                   Toast.LENGTH_LONG).show();
+           //TODO: handle error
+           Log.d(TAG, "Failed: " + throwable.getMessage());
        }
    });
 ```
 
 ### 1.6. Displaying Taboola recommendations
-```java
-   TBPlacement placement = placementsMap.get(placementName);
-   TBRecommendationItem item = placement.getItems().get(0);
+To display Taboola native views, follow these steps:
 
-   mAdContainer.addView(item.getThumbnailView(MainActivity.this));
-   mAdContainer.addView(item.getTitleView(MainActivity.this));
-   TBTextView brandingView = item.getBrandingView(this);
-   if (brandingView != null) { // If branding text is not available null is returned
-       mAdContainer.addView(brandingView);
+#### 1.6.1. About <AdContainer>:
+In the upcoming code sample, <AdContainer> is the View in which you wish to contain Taboola's child Views. This example shows how to add the views of one Taboola Item to a parent View in your app.
+
+#### 1.6.2. Extract Taboola Views from Server data
+Inside the "onRecommendationsFetched" callback, after creating the placementsMap instance, extract a Taboola placement object and from it, a Taboola item. You can display Taboola content using native objects using the following code:
+```java
+   TaboolaApi.getInstance().fetchRecommendations(recommendationsRequest, new TBRecommendationRequestCallback() {
+       @Override
+       public void onRecommendationsFetched(TBRecommendationsResponse response) {
+           // map where a Key is the Placements name (you can store it as a member variable for convenience)
+           Map<String, TBPlacement> placementsMap = response.getPlacementsMap();
+           
+           extractViewsFromOneItem();
+
+   }
+   
+   /**
+    * This demo only shows handling one item, you might want to display additional items.
+    * (For example, directly inject the Item List to a RecyclerView adapter).
+    */
+   private void extractViewsFromOneItem() {
+    TBPlacement placement = placementsMap.get(placementName);
+    if (placement != null){
+      TBRecommendationItem item = placement.getItems().get(0);
+      <AdContainer>.addView(item.getThumbnailView(<Actvitiy>));
+      <AdContainer>.addView(item.getTitleView(<Actvitiy>));
+      TBTextView brandingView = item.getBrandingView(<Actvitiy>);
+      if (brandingView != null) { // If branding text is not available null is returned
+        <AdContainer>.addView(brandingView);
+      }
+    }
    }
 ```
+Note: A `brandingView` is meant to display the advertising brand information.
 
-### 1.7. Supply your own implementation of the attribution view
-Attribution view is a view with localized "By Taboola" text and icon.
-Call `handleAttributionClick()` every time this view is clicked
+### 1.7.Taboola Attribution View
+Taboola Attribution View is a view with a "By Taboola" text and icon.
+
+#### 1.7.1. Add Taboola Attribution View to your layout
+The following is a sample, feel free to implement yourself:
+```xml
+    <LinearLayout
+        android:id="@+id/attribution_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:weightSum="4"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/icon_attribution"/>
+        
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
+            android:layout_weight="3"
+            android:gravity="right"
+            android:text="@string/attribution_view_text"/>
+    </LinearLayout>
+```
+
+#### 1.7.2. Find Taboola Attribution View
 ```java
+  View attributionView = <Activity>.findViewById(R.id.attribution_view);
+```
+
+#### 1.7.3. Set a click listener on Taboola Attribution View:
+```java
+   attributionView.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        onAttributionClick();
+      }
+   });
+        
    public void onAttributionClick() {
-       TaboolaApi.getInstance().handleAttributionClick(MainActivity.this);
+       TaboolaApi.getInstance().handleAttributionClick(<Activity>);
    }
 ```
 
@@ -142,53 +210,89 @@ Used for implementing pagination or infinite scroll (load more items when the us
 
 
 ```Java
-   TaboolaApi.getInstance().getNextBatchForPlacement(mPlacement, optionalCount, new TBRecommendationRequestCallback() {
-           @Override
-           public void onRecommendationsFetched(TBRecommendationsResponse response) {
-               TBPlacement placement = response.getPlacementsMap().values().iterator().next(); // there will be only one placement
-               // todo do smth with new the Items
-           }
+TaboolaApi.getInstance().getNextBatchForPlacement(mPlacement, optionalCount, new TBRecommendationRequestCallback() {
+  @Override
+  public void onRecommendationsFetched(TBRecommendationsResponse response) {
+    TBPlacement placement = response.getPlacementsMap().values().iterator().next(); // There will be only one placement.
+    //TODO: Do something with new the Items
+  } 
 
-           @Override
-           public void onRecommendationsFailed(Throwable throwable) {
-               Toast.makeText(MainActivity.this, "Fetch failed: " + throwable.getMessage(),
-                       Toast.LENGTH_LONG).show();
-           }
- });
+  @Override
+  public void onRecommendationsFailed(Throwable throwable) {
+    Log.d(TAG, "Fetch failed:" + throwable.getMessage());
+  } 
+});
 ```
-
 
 ### 1.9. Intercepting recommendation clicks
 
-The default click behavior of TaboolaWidget is as follows:
+##### 1.9.1. The default click behaviour of TaboolaWidget is as follows:
+* On devices where `Chrome Custom Tabs` are supported - Taboola will open the recommendation in a Chrome Custom Tab (in-app)
+* Otherwise - Taboola will open the recommendation in the default system web browser (outside of the app)
 
-* On devices where Chrome custom tab is supported - open the recommendation in a Chrome custom tab (in-app)
-* Otherwise - open the recommendation in the system default web browser (outside of the app)
-
+##### 1.9.2. Overriding default behaviour:
 TaboolaApi allows app developers to intercept recommendation clicks in order to create a click-through or to override the default way of opening the recommended article.
 
 In order to intercept clicks, you should implement the interface `com.taboola.android.api.TaboolaOnClickListener` and set it in the sdk.
 
-```java
-   TaboolaApi.getInstance().setOnClickListener(new TaboolaOnClickListener() {
-       @Override
-       public boolean onItemClick(String placementName, String itemId, String clickUrl, boolean isOrganic) {
-           return false;
-       }
-   });
+1. Implement the interface `com.taboola.android.api.TaboolaOnClickListener` 
+    1.1 `TaboolaOnClickListener` include the methods:
+     ```java
+    public boolean onItemClick(String placementName, String itemId, String clickUrl, boolean isOrganic);
+     ```
+    1.2 Example implementation:
+    In the same Activity/Fragment as `TaboolaWidget` instance:
+     ```java
+    TaboolaOnClickListener taboolaOnClickListener = new TaboolaOnClickListener() {
+      @Override
+      public boolean onItemClick(String placementName, String itemId, String clickUrl, boolean isOrganic) {          
+          //Code...
+          return false;
+      }};
+     ```    
+2. Connect the event listener to your `TaboolaWidget` instance. 
+    ```java
+    TaboolaApi.getInstance().setOnClickListener(taboolaOnClickListener);
+    ```    
+    
+##### 1.9.3. Event: onItemClick
+`boolean onItemClick(String placementName, String itemId, String clickUrl, boolean isOrganic)`
+This method will be called every time a user clicks on a Taboola Recommendation, right before it is sent to Android OS for relevant action resolve. The return value of this method allows you to control further system behaviour (after your own code executes).
 
-```
+###### 1.9.3.1 `placementName:`
+The name of the placement, in which an Item was clicked.
 
-This method will be called every time a user clicks a recommendation, right before triggering the default behavior. You can block default click handling for organic items by returning `false` in `onItemClick()` method.
+###### 1.9.3.2 `itemtId:`
+The id of the Item clicked.
 
-* Return **`false`** - abort the default behavior, the app should display the recommendation content on its own (for example, using an in-app browser). (Aborts only for organic items!)
-* Return **`true`** - this will allow the app to implement a click-through and continue to the default behaviour.
+###### 1.9.3.3 `clickUrl:`
+Original click url.
 
-`isOrganic` indicates whether the item clicked was an organic content recommendation or not.
-**Best practice would be to suppress the default behavior for organic items, and instead open the relevant screen in your app which shows that piece of content.**
+###### 1.9.3.4 `isOrganic:` 
+Indicates whether the item clicked was an organic content item or not.
+(The default behavior would be to allow users a regular click on organic traffic. If you wish, you can suppress the default behavior for organic items, and instead open the relevant screen in your app which will show that piece of content).
 
+###### 1.9.3.5 `Return value:`
+* Returning **`false`** - Aborts the click's default behavior. The app should display the Taboola Recommendation content on its own (for example, using an in-app browser).
+* Returning **`true`** - The click will be a standard one and will be sent to the Android OS for default behaviour.
+**Note:** Sponsored item clicks (non-organic) are not overridable!    
+    
+    
 ## 2. Example App
 This repository includes an example Android app which uses the `TaboolaApi`.
+
+To use it:
+##### 2.1 Clone this repository
+1. Look for the "Clone or Download" button on this page top.
+2. Copy the url from the drop box.
+3. Clone to your local machine using your favourite Git client.
+
+##### 2.2 Open the project wih your IDE.
+1. Open the project as you would any other Android project.
+2. Taboola is optimized to working with Android Studio but other IDEs should work as well.
+
+##### 2.3 Example App As Troubleshooting Helper:
+In case you encounter some issues while integrating the SDK into your app, try to recreate the scenario within the example app. This might help to isolate the problems. For more help, you would be able to send the example app with your recreated issue to Taboola's support.
 
 ## 3. SDK Reference
 [TaboolaApi Reference](doc/TaboolaApi_reference.md)
@@ -201,22 +305,13 @@ The file contains instructions to the rules which you should use depending on wh
 In order to support the The EU General Data Protection Regulation (GDPR - https://www.eugdpr.org/) in Taboola Mobile SDK, application developer should show a pop up asking the user’s permission for storing their personal data in the App. In order to control the user’s personal data (to store in the App or not) there exists a flag `User_opt_out`. It’s mandatory to set this flag when using the Taboola SDK. The way to set this flag depends on the type of SDK you are using. By default we assume no permission from the user on a pop up, so the personal data will not be saved.
 
 ### 5.1. How to set the flag in the SDK integration
-Below you can find the way how to set the flag on API Android SDK we support. It’s recommended to put these lines alongside the other settings, such as publisher name, etc
-In the HTML file that contain the JS with publisher details, you will need to add:
-```javascript
-// Sample code
-public class SampleApplication extends Application {
-   @Override
-   public void onCreate() {
-       HashMap<String, String> optionalPageCommands = new HashMap<>();     super.onCreate();
-       TaboolaApi.getInstance().init(getApplicationContext(), "the-publisher-name",
-               "4123415900f1234825a66812345cef18cc123427");
-       TaboolaApi.getInstance().setImagePlaceholder(getResources().getDrawable(R.drawable.image_placeholder));
-       optionalPageCommands.put("apiParams","user.opt_out=true");
-       TaboolaApi.getInstance().setExtraProperties(optionalPageCommands);
-   }
-}
+Below you can find the way how to set the flag on API Android SDK we support. It’s recommended to put these lines alongside the other settings, such as publisher name, etc.
 
+```java
+    ...
+    HashMap<String, String> optionalPageCommands = new HashMap<>();
+    optionalPageCommands.put("apiParams", "user.opt_out=true");
+    TaboolaApi.getInstance().setExtraProperties(optionalPageCommands);
 ```
 
 ## 6. License
