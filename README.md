@@ -18,12 +18,6 @@ The views will automatically handle everything else: click handling, reporting v
 Browse through the sample apps in this repository to see how the TaboolaApi can be implemented in different types of apps.
 ## 1. Getting Started
 
-
->The TaboolaApi for Android is based on Taboola's REST API v1.2.
-Please refer to the the Taboola REST API documenation for more details.
-
-
-
 ### 1.1. Minimum requirements
 
 * Android version 4.0  (```android:minSdkVersion="14"```)
