@@ -1,12 +1,11 @@
 ###---------- Begin: proguard configuration for Taboola API  ----------
-# add if NOT using DFP mediation
--dontwarn com.taboola.android.mediation.DfpCustomEventBanner
 
-# add if NOT using MoPub mediation
--dontwarn com.taboola.android.mediation.MoPubCustomEventBanner
+-dontwarn com.google.gson.annotations.**
 
 -keepnames class com.taboola.android.integration_verifier.testing.tests.proguard_stub.ProguardVerificationStub
+
 -keep class com.taboola.android.monitor.** {*;}
+
 ###---------- End: proguard configuration for Taboola API  ----------
 
 
